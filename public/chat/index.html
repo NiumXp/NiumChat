@@ -75,8 +75,10 @@
 
 
         function renderUsername(name) {
-            const today = new Date()
-            name = `${name} at ${today.getHours()}:${today.getMinutes()}`
+            const today = new Date();
+            const minutes = today.getMinutes();
+
+            name = `${name} at ${today.getHours()}:${minutes <= 9? '0' + minutes : minutes}`
             return "<h5 class='username'>" + name + "</h5>"
         }
 
