@@ -73,11 +73,18 @@
             $(".messages").append(html)
         }
 
+
+        function renderUsername(name) {
+            const today = new Date()
+            name = `${name} at ${today.getHours()}:${today.getMinutes()}`
+            return "<h5 class='username'>" + name + "</h5>"
+        }
+
         function renderMessage(message) {
             addMessageRendered(
-                "<div class='message'><img class='user-image' src='" + message.author.avatar_url + 
-                "'><div class='content'><h5 class='username'>" + message.author.name +
-                "</h5><p>" + message.content + "</p></div></div>")
+                "<div class='message'><img class='user-image' src='" + message.author.avatar_url + "'><div class='content'>" + 
+                    renderUsername(message.author.name) + 
+                    "<p>" + message.content + "</p></div></div>")
 
             updateScroll()
         }
