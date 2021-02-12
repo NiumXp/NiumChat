@@ -18,19 +18,8 @@ app.use('/chat', (_, res) => res.render('index.html'));
 const lastDate = {};
 const rateLimiter = {};
 
-const DEFAULT_USER_AVATAR = 'https://i.pinimg.com/originals/b4/00/85/b400851a6b07f8877a9236f275bd8d4f.jpg';
-
-const mentionRegExp = new RegExp(/@(\w*[a-zA-Z0-9])/gm);
-
-function breakString(s, a) {
-    if (s.length > a) s = s.slice(0, a);
-    return s;
-}
-
-function getMentions(s) {
-    console.log(mentionRegExp.exec(s));
-    return [];
-}
+const breakString = (s, a) => s.length > a ? s.slice(0, a) : s;
+const getMentions = (s) => s.split(' ').join('\n').match(/^@[a-z]*$/gm);
 
 io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} conectado.`);
@@ -43,9 +32,8 @@ io.on('connection', (socket) => {
                 avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR,
             },
             content: breakString(data.content, 250),
+            mentions: getMentions(data.content),
         };
-
-        data.mentions = getMentions(data.content);
 
         if (data.content.length > 250) data.content = data.content.slice(0, 250);
 
@@ -81,4 +69,6 @@ io.on('disconnect', (socket) => {
     delete rateLimiter[socket.id];
 });
 
-server.listen(process.env.PORT || 3000, () => console.log("Running!"));
+server.listen(process.env.PORT || 3000, () => console.log('Running!'));
+
+var DEFAULT_USER_AVATAR = 'https://i.imgur.com/HXv93eV.jpg';
