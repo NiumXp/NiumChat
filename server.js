@@ -26,6 +26,18 @@ const rateLimiter = {}
 
 const DEFAULT_USER_AVATAR = "https://i.pinimg.com/originals/b4/00/85/b400851a6b07f8877a9236f275bd8d4f.jpg"
 
+const mentionRegExp = new RegExp(/@(\w*[a-zA-Z0-9])/g)
+
+function breakString(s, a) {
+    if (s.length > a) s = s.slice(0, a)
+    return s
+}
+
+function getMentions(s) {
+    console.log(mentionRegExp.exec(s))
+    return []
+}
+
 io.on("connection", socket => {
     console.log(`Socket ${socket.id} conectado.`)
 
@@ -36,8 +48,10 @@ io.on("connection", socket => {
                 name: data.author.name,
                 avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR
             },
-            content: data.content
+            content: breakString(data.content, 250)
         }
+
+        data.mentions = getMentions(data.content)
 
         if (data.content.length > 250) {
             data.content = data.content.slice(0, 250)
