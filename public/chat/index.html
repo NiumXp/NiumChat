@@ -91,13 +91,30 @@
             updateScroll()
         }
 
+        function playAudio(path) {
+            const audio = new Audio(path)
+            audio.play()
+        }
+
+        function messageNotify() {
+            playAudio("./message.ogg")
+        }
+
+        function mentionNotify() {
+            playAudio("./mention.ogg")
+        }
+
         socket.on("messageNotSended", (m) => {})
 
         socket.on("receivedMessage", (m) => {
             renderMessage(m)
 
-            const audio = new Audio("./notification.ogg")
-            audio.play()
+            const name = "@" + getName()
+            if (name in m.mentions) {
+                mentionNotify()
+            } else {
+                messageNotify()
+            }
         })
 
         socket.on("messageSended", (m) => {
