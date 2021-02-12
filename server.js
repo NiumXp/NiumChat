@@ -71,4 +71,4 @@ io.on('disconnect', (socket) => {
 
 server.listen(process.env.PORT || 3000, () => console.log('Running!'));
 
-var DEFAULT_USER_AVATAR = 'https://i.imgur.com/HXv93eV.jpg';
+var DEFAULT_USER_AVATAR = 'https://i.imgur.com/HXv93eV.jpg'; // quem mudar daqui, vai cair o pau quando for mijar
