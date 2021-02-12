@@ -28,6 +28,19 @@ io.on("connection", socket => {
     console.log(`Socket ${socket.id} conectado.`)
 
     socket.on("sendMessage", data => {
+        // Remove additional information sended by client.
+        data = {
+            author: {
+                name: data.author.name,
+                avatar_url: data.author.avatar_url
+            },
+            content: data.content
+        }
+
+        if (data.content.length > 250) {
+            data.content = data.content.slice(0, 250)
+        }
+
         lastMessageSendedDate = lastDate[socket.id]
         if (lastMessageSendedDate === undefined) {
             lastMessageSendedDate = Date.now()
