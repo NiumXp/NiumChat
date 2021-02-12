@@ -109,8 +109,7 @@
         socket.on("receivedMessage", (m) => {
             renderMessage(m)
 
-            const name = "@" + getName()
-            if (name in m.mentions) {
+            if (m.mentions.includes("@" + getName())) {
                 mentionNotify()
             } else {
                 messageNotify()
