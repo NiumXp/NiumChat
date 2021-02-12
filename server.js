@@ -24,6 +24,8 @@ app.use("/chat", (req, res) => {
 const lastDate = {}
 const rateLimiter = {}
 
+const DEFAULT_USER_AVATAR = "https://i.pinimg.com/originals/b4/00/85/b400851a6b07f8877a9236f275bd8d4f.jpg"
+
 io.on("connection", socket => {
     console.log(`Socket ${socket.id} conectado.`)
 
@@ -32,7 +34,7 @@ io.on("connection", socket => {
         data = {
             author: {
                 name: data.author.name,
-                avatar_url: data.author.avatar_url
+                avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR
             },
             content: data.content
         }
