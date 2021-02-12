@@ -30,6 +30,7 @@
     </div>
 
     <script type="text/javascript" defer>
+        //const address = "http://localhost:3000"
         const address = "https://nium-chat.herokuapp.com"
         const socket = io(address)
 
@@ -108,7 +109,7 @@
 
         socket.on("receivedMessage", (m) => {
             renderMessage(m)
-
+            console.log(m.mentions)
             if (m.mentions.includes("@" + getName())) {
                 mentionNotify()
             } else {

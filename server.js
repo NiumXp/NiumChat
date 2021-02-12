@@ -19,7 +19,7 @@ const lastDate = {};
 const rateLimiter = {};
 
 const breakString = (s, a) => s.length > a ? s.slice(0, a) : s;
-const getMentions = (s) => s.split(' ').join('\n').match(/^@[a-z]*$/gm) || [];
+const getMentions = (s) => s.split(' ').join('\n').match(/^@[a-zA-Z0-9]*$/gm) || [];
 
 io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} conectado.`);
