@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Name</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+    <style>
+        :root {
+            --border: rgb(119, 0, 255);
+            --background: rgba(119, 0, 255, 0.025);
+        }
+
+        * {
+            padding: 0px;
+            margin: 0px;
+
+            color: white;
+            font-size: larger;
+        }
+
+        body {
+            padding: 25px;
+
+            margin: auto;
+            width: 50%;
+            height: 50%;
+
+            color: white;
+
+            background-color: rgba(0, 0, 0, 0.931);
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+
+            padding: 50px;
+
+            display: block;
+            margin: auto;
+
+        }
+
+        form {
+            margin: auto;
+        }
+
+        input {
+            padding: 10px;
+            border: var(--border) solid 2px;
+            background-color: var(--background);
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        button {
+            padding: 10px 35px 10px 35px;
+            border: var(--border) solid 2px;
+            background-color: var(--background);
+        }
+
+        ul {
+            margin-top: 35px;
+            opacity: 75%;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="user-input">
+            <input id="username" name="username" type="text" autocomplete="off" placeholder="Digite o seu nome">
+            <button type="submit">Ok</button>
+        </form>
+        <ul>
+            <li><p>Utilize apenas números e letras.</p></li>
+            <li><p>O nome deve conter de 3 a 10 caracteres.</p></li>
+        </ul>
+    </div>
+
+    <script>
+        function setCookie(name,value,days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function redirectToChat() {
+            window.location.replace(window.location.href + "/chat")
+        }
+
+        const name = getCookie("chatUsername")
+
+        if (name !== null) {
+            redirectToChat()
+        }
+
+        $("#user-input").submit(function(event) {
+            event.preventDefault()
+
+            const username = $("input[name=username]").val()
+
+            if (3 <= username.length && 10 >= username.length) {
+                setCookie("chatUsername", username, 1)
+                redirectToChat()
+            }
+        })
+    </script>
+</body>
+</html>

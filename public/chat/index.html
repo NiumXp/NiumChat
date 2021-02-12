@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Node chat</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <p id="note">Você pode digitar <strong class="command">/clear</strong> para limpar as mensagens.</p>
+    <div id="squares" class="flex">
+        <div class="square purple"></div>
+        <div class="square crimson"></div>
+        <div class="square wheat"></div>
+        <div class="square green"></div>
+        <div class="square blue"></div>
+    </div>
+    <div id="chat">
+        <div class="messages"></div>
+        <form id="text-box" class="flex">
+            <input id="message" type="text" name="message" autocomplete="off" placeholder="Digite sua mensagem">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script type="text/javascript" defer>
+        const address = "https://nium-chat.herokuapp.com"
+        const socket = io(address)
+
+        const squares = document.getElementsByClassName("square")
+
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function getName() {
+            let name = getCookie("chatUsername")
+            return name || socket.id
+        }
+
+        for (square of squares) {
+            square.addEventListener("click", onSquareClicked)
+        }
+
+        function onSquareClicked(square) {
+            let r = document.querySelector(':root')
+            square = window.getComputedStyle(square.target)
+
+            r.style.setProperty('--border',
+                square.getPropertyValue("border-color"))
+            r.style.setProperty('--background',
+                square.getPropertyValue("background-color"))
+        }
+
+        function updateScroll(){
+            $('.messages').animate({scrollTop: $('.messages').prop("scrollHeight")}, 500);
+        }
+
+        function addMessageRendered(html) {
+            $(".messages").append(html)
+        }
+
+        function renderMessage(message) {
+            addMessageRendered(
+                "<div class='message'><img class='user-image' src='" + message.author.avatar_url + 
+                "'><div class='content'><h5 class='username'>" + message.author.name +
+                "</h5><p>" + message.content + "</p></div></div>")
+
+            updateScroll()
+        }
+
+        socket.on("messageNotSended", (m) => {})
+
+        socket.on("receivedMessage", (m) => {
+            renderMessage(m)
+
+            const audio = new Audio("./notification.ogg")
+            audio.play()
+        })
+
+        socket.on("messageSended", (m) => {
+            document.getElementById("message").value = ''
+            renderMessage(m)
+        })
+
+        $("#chat").submit(function(event) {
+            event.preventDefault()
+            const message = $("input[name=message]").val()
+
+            if (message.length) {
+                if (message === "/clear") {
+                    return $(".messages").html("")
+                }
+
+                const messageObject = {
+                    author: {
+                        name: getName(),
+                        avatar_url: "https://www.nailseatowncouncil.gov.uk/wp-content/uploads/blank-profile-picture-973460_1280.jpg"
+                    },
+                    content: message
+                }
+
+                socket.emit("sendMessage", messageObject)
+            }
+        })
+    </script>
+</body>
+</html>
