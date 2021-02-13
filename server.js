@@ -18,8 +18,11 @@ app.use('/chat', (_, res) => res.render('index.html'));
 const lastDate = {};
 const rateLimiter = {};
 
+const linkRegExp = new RegExp('(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})')
+const mentionRegExp = new RegExp('\@([a-zA-Z0-9]+)', 'gm')
+
 const breakString = (s, a) => s.length > a ? s.slice(0, a) : s;
-const getMentions = (s) => s.match(/\@([a-zA-Z0-9]+)/gm) || [];
+const getMentions = (s) => s.match(mentionRegExp) || [];
 
 io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} conectado.`);
@@ -35,7 +38,9 @@ io.on('connection', (socket) => {
             mentions: getMentions(data.content),
         };
 
-        if (data.content.length > 250) data.content = data.content.slice(0, 250);
+        data.content = data.content.replace(linkRegExp, (item) => {
+            return `<a href='${item}' class='link' target='_blank'>&ltlink&gt</a>`
+        })
 
         let lastMessageSendedDate = lastDate[socket.id];
         if (!lastMessageSendedDate) lastMessageSendedDate = Date.now();
