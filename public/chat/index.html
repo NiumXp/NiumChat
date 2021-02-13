@@ -30,48 +30,43 @@
     </div>
 
     <script type="text/javascript" defer>
-        //const address = "http://localhost:3000"
-        const address = "https://nium-chat.herokuapp.com"
-        const socket = io(address)
+        // const address = "http://localhost:3000";
+        const address = 'https://nium-chat.herokuapp.com';
+        const socket = io(address);
 
-        const squares = document.getElementsByClassName("square")
+        const squares = document.getElementsByClassName('square');
 
         function getCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            const nameEQ = `${name}=`;
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
         }
 
         function getName() {
-            let name = getCookie("chatUsername")
-            return name || socket.id
+            return getCookie('chatUsername') || socket.id;
         }
 
-        for (square of squares) {
-            square.addEventListener("click", onSquareClicked)
-        }
+        for (square of squares) square.addEventListener('click', onSquareClicked);
 
         function onSquareClicked(square) {
-            let r = document.querySelector(':root')
-            square = window.getComputedStyle(square.target)
+            let r = document.querySelector(':root');
+            square = window.getComputedStyle(square.target);
 
-            r.style.setProperty('--border',
-                square.getPropertyValue("border-color"))
-            r.style.setProperty('--background',
-                square.getPropertyValue("background-color"))
+            r.style.setProperty('--border', square.getPropertyValue('border-color'));
+            r.style.setProperty('--background', square.getPropertyValue('background-color'));
         }
 
-        function updateScroll(){
-            $('.messages').animate({scrollTop: $('.messages').prop("scrollHeight")}, 500);
+        function updateScroll() {
+            $('.messages').animate({ scrollTop: $('.messages').prop('scrollHeight') }, 500);
         }
 
         function addMessageRendered(html) {
-            $(".messages").append(html)
+            $('.messages').append(html);
         }
 
 
@@ -79,67 +74,54 @@
             const today = new Date();
             const minutes = today.getMinutes();
 
-            name = `${name} at ${today.getHours()}:${minutes <= 9? '0' + minutes : minutes}`
-            return "<h5 class='username'>" + name + "</h5>"
+            name = `${name} at ${today.getHours()}:${minutes <= 9? '0' + minutes : minutes}`;
+            return "<h5 class='username'>" + name + "</h5>";
         }
 
         function renderMessage(message) {
             addMessageRendered(
                 "<div class='message'><img class='user-image' src='" + message.author.avatar_url + "'><div class='content'>" + 
-                    renderUsername(message.author.name) + 
-                    "<p>" + message.content + "</p></div></div>")
+                renderUsername(message.author.name) + 
+                "<p>" + message.content + "</p></div></div>"
+            );
 
-            updateScroll()
+            updateScroll();
+        }
+        
+        function playAudioNotification(path) {
+            return new Audio(`./${path}.ogg`).play();
         }
 
-        function playAudio(path) {
-            const audio = new Audio(path)
-            audio.play()
-        }
-
-        function messageNotify() {
-            playAudio("./message.ogg")
-        }
-
-        function mentionNotify() {
-            playAudio("./mention.ogg")
-        }
-
-        socket.on("messageNotSended", (m) => {})
+        socket.on("messageNotSended", (m) => {});
 
         socket.on("receivedMessage", (m) => {
-            renderMessage(m)
-            console.log(m.mentions)
-            if (m.mentions.includes("@" + getName())) {
-                mentionNotify()
-            } else {
-                messageNotify()
-            }
+            renderMessage(m);
+            console.log(m.mentions);
+
+            if (m.mentions.includes(`@${getName()}`)) return playAudioNotification('mention');
+            
+            return playAudioNotification('message');
         })
 
         socket.on("messageSended", (m) => {
-            document.getElementById("message").value = ''
-            renderMessage(m)
+            document.getElementById("message").value = '';
+            renderMessage(m);
         })
 
-        $("#chat").submit(function(event) {
-            event.preventDefault()
-            const message = $("input[name=message]").val()
+        $("#chat").submit((event) => {
+            event.preventDefault();
+            const message = $("input[name=message]").val();
 
             if (message.length) {
-                if (message === "/clear") {
-                    return $(".messages").html("")
-                }
+                if (message === "/clear") return $(".messages").html("");
 
-                const messageObject = {
+                return socket.emit("sendMessage", {
                     author: {
                         name: getName(),
                         avatar_url: getCookie("chatAvatarUrl")
                     },
                     content: message
-                }
-
-                socket.emit("sendMessage", messageObject)
+                });
             }
         })
     </script>
