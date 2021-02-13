@@ -34,6 +34,8 @@
         const address = 'https://nium-chat.herokuapp.com';
         const socket = io(address);
 
+        const mentionRegExp = new RegExp(/\@([a-zA-Z0-9]+)/gm)
+
         const squares = document.getElementsByClassName('square');
 
         function getCookie(name) {
@@ -69,7 +71,6 @@
             $('.messages').append(html);
         }
 
-
         function renderUsername(name) {
             const today = new Date();
             const minutes = today.getMinutes();
@@ -78,11 +79,19 @@
             return "<h5 class='username'>" + name + "</h5>";
         }
 
+        function renderMessageContent(string) {
+            string = string.replace(mentionRegExp, (item) => {
+                console.log(item);
+                return `<span class='mention'>${item}</span>`
+            })
+            return `<p>${string}</p>`
+        }
+
         function renderMessage(message) {
             addMessageRendered(
                 "<div class='message'><img class='user-image' src='" + message.author.avatar_url + "'><div class='content'>" + 
                 renderUsername(message.author.name) + 
-                "<p>" + message.content + "</p></div></div>"
+                renderMessageContent(message.content) + "</div></div>"
             );
 
             updateScroll();

@@ -5,6 +5,10 @@
     --background: rgba(119, 0, 255, 0.025);
 }
 
+.mention {
+    color: var(--border);
+}
+
 .purple {
     border: rgb(119, 0, 255) solid 2px;
     background-color: rgba(119, 0, 255, 0.025);
