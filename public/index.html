@@ -112,7 +112,7 @@
             return window.location.replace(window.location.href + '/chat');
         }
 
-        if (getCookie('chatUsername')) return redirectToChat();
+        if (getCookie('chatUsername')) redirectToChat();
 
         $('#user-input').submit((event) => {
             event.preventDefault();
