@@ -147,7 +147,7 @@ body {
 
 .message p {
     font-size: larger;
-    overflow-wrap: break-word
+    overflow-wrap: anywhere;
 }
 
 .command {
