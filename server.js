@@ -31,6 +31,15 @@ io.on('connection', (socket) => {
 
     console.log(`Socket ${socket.id} conectado.`);
 
+    socket.on('disconnect', (reason) => {
+        connections--;
+
+        delete lastDate[socket.id];
+        delete rateLimiter[socket.id];
+    
+        socket.broadcast.emit("usersCountUpdated", connections)
+    });
+
     socket.on('sendMessage', (data) => {
         // Remove additional information sended by client.
         data = {
@@ -76,15 +85,6 @@ io.on('connection', (socket) => {
 
     socket.emit("usersCountUpdated", connections);
     socket.broadcast.emit("usersCountUpdated", connections);
-});
-
-io.on('disconnect', (socket) => {
-    connections--;
-
-    delete lastDate[socket.id];
-    delete rateLimiter[socket.id];
-
-    socket.broadcast.emit("usersCountUpdated", connections)
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('Running!'));
