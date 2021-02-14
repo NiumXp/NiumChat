@@ -15,6 +15,13 @@
     border-bottom: none;
 }
 
+.simple-message {
+    color: var(--border);
+    font-size: larger;
+    margin: 5px;
+    margin-left: 15px;
+}
+
 .link {
     color: var(--border)
 }

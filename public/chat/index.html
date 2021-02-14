@@ -96,6 +96,11 @@
             return `<p>${string}</p>`
         }
 
+        function renderSimpleMessage(string) {
+            addMessageRendered(`<p class='simple-message'>${string}</p>`);
+            updateScroll();
+        }
+
         function renderMessage(message) {
             addMessageRendered(
                 "<div class='message'><img class='user-image' src='" + message.author.avatar_url + "'><div class='content'>" + 
@@ -116,9 +121,13 @@
 
         socket.on("messageNotSended", (m) => {});
 
-        socket.on("userLeft", (name) => {});
+        socket.on("userLeft", (name) => {
+            renderSimpleMessage(`${name} saiu do chat!`)
+        });
 
-        socket.on("userJoin", (name) => {});
+        socket.on("userJoin", (name) => {
+            renderSimpleMessage(`${name} entrou no chat!`)
+        });
 
         socket.on("usersCountUpdated", (n) => {
             console.log(n)
