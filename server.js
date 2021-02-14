@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
         data.content = data.content.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
         data.content = data.content.replace(linkRegExp, (item) => {
-            item = item.replace(/\'/, "%27").replace(/\"/, "%22").replace(/\`/, "%60")
+            item = item.replace("'", "%27").replace('"', "%22").replace('`', "%60")
             return `<a href='${item}' class='link' target='_blank'>${item}</a>`
         });
 
