@@ -42,11 +42,11 @@ io.on('connection', (socket) => {
             mentions: getMentions(data.content),
         };
 
-        data.content = data.content.replace(linkRegExp, (item) => {
-            return `<a href='${item}' class='link' target='_blank'>&ltlink&gt</a>`
-        });
-
         data.content = data.content.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
+        data.content = data.content.replace(linkRegExp, (item) => {
+            return `<a href='${item}' class='link' target='_blank'>${breakString(item, 15)}</a>`
+        });
 
         let lastMessageSendedDate = lastDate[socket.id];
         if (!lastMessageSendedDate) lastMessageSendedDate = Date.now();
