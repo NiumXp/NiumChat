@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
         // Remove additional information sended by client.
         data = {
             author: {
-                name: data.author.name,
+                name: breakString(data.author.name, 10),
                 avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR,
             },
             content: breakString(data.content, 250),
