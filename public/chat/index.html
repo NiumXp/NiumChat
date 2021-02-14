@@ -130,13 +130,11 @@
         });
 
         socket.on("usersCountUpdated", (n) => {
-            console.log(n)
             setUsersCounter(n)
         });
 
         socket.on("receivedMessage", (m) => {
             renderMessage(m);
-            console.log(m.mentions);
 
             if (m.mentions.includes(`@${getName()}`)) return playAudioNotification('mention');
             
