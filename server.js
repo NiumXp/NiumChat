@@ -29,15 +29,16 @@ let connections = 0;
 io.on('connection', (socket) => {
     connections++;
 
-    console.log(`Socket ${socket.id} conectado.`);
+    socket.broadcast.emit("userJoin", socket.id);
 
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', () => {
         connections--;
 
         delete lastDate[socket.id];
         delete rateLimiter[socket.id];
-    
-        socket.broadcast.emit("usersCountUpdated", connections)
+
+        socket.broadcast.emit("userLeft", socket.id);
+        socket.broadcast.emit("usersCountUpdated", connections);
     });
 
     socket.on('sendMessage', (data) => {
