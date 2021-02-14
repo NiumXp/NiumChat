@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
         data = {
             author: {
                 name: escapeHTML(breakString(data.author.name, 10)),
-                avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR,
+                avatar_url: encodeURI(data.author.avatar_url) || DEFAULT_USER_AVATAR,
             },
             content: escapeHTML(breakString(data.content, 250)),
         };
@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
         data.mentions = getMentions(data.content)
 
         data.content = data.content.replace(linkRegExp, (item) => {
-            item = item.replace("'", "%27").replace('"', "%22").replace('`', "%60")
+            item = encodeURI(item)
             return `<a href='${item}' class='link' target='_blank'>${item}</a>`
         });
 
