@@ -5,8 +5,14 @@
     --background: rgba(119, 0, 255, 0.025);
 }
 
-.mention {
+.colored {
     color: var(--border);
+}
+
+.top-bar {
+    padding: 5px 10px 5px 10px;
+    border: var(--border) solid 1px;
+    border-bottom: none;
 }
 
 .link {

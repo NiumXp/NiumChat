@@ -22,6 +22,9 @@
         <div class="square blue"></div>
     </div>
     <div id="chat">
+        <div class="top-bar">
+            <p>Há <strong id="users-counter" class="colored">0</strong> usuários no chat!</p>
+        </div>
         <div class="messages"></div>
         <form id="text-box" class="flex">
             <input id="message" type="text" name="message" autocomplete="off" placeholder="Digite sua mensagem">
@@ -89,7 +92,7 @@
         function renderMessageContent(string) {
             string = string.replace(mentionRegExp, (item) => {
                 console.log(item);
-                return `<span class='mention'>${item}</span>`
+                return `<span class='colored'>${item}</span>`
             })
             return `<p>${string}</p>`
         }
@@ -108,7 +111,16 @@
             return new Audio(`./${path}.ogg`).play();
         }
 
+        function setUsersCounter(n) {
+            $('#users-counter').html(n)
+        }
+
         socket.on("messageNotSended", (m) => {});
+
+        socket.on("usersCountUpdated", (n) => {
+            console.log(n)
+            setUsersCounter(n)
+        });
 
         socket.on("receivedMessage", (m) => {
             renderMessage(m);

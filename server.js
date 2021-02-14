@@ -24,7 +24,11 @@ const mentionRegExp = new RegExp('\@([a-zA-Z0-9]+)', 'gm')
 const breakString = (s, a) => s.length > a ? s.slice(0, a) : s;
 const getMentions = (s) => s.match(mentionRegExp) || [];
 
+let connections = 0;
+
 io.on('connection', (socket) => {
+    connections++;
+
     console.log(`Socket ${socket.id} conectado.`);
 
     socket.on('sendMessage', (data) => {
@@ -69,11 +73,18 @@ io.on('connection', (socket) => {
         
         return socket.emit('messageNotSended', data);
     });
+
+    socket.emit("usersCountUpdated", connections);
+    socket.broadcast.emit("usersCountUpdated", connections);
 });
 
 io.on('disconnect', (socket) => {
+    connections--;
+
     delete lastDate[socket.id];
     delete rateLimiter[socket.id];
+
+    socket.broadcast.emit("usersCountUpdated", connections)
 });
 
 server.listen(process.env.PORT || 3000, () => console.log('Running!'));
