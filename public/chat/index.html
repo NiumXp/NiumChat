@@ -49,6 +49,13 @@
             return null;
         }
 
+        function redirectToHome() {
+            return window.location.replace(
+                window.location.href.replace('/chat', ''));
+        }
+
+        if (getCookie('chatUsername') === null) redirectToHome()
+
         function getName() {
             return getCookie('chatUsername') || socket.id;
         }
