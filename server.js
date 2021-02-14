@@ -40,7 +40,9 @@ io.on('connection', (socket) => {
 
         data.content = data.content.replace(linkRegExp, (item) => {
             return `<a href='${item}' class='link' target='_blank'>&ltlink&gt</a>`
-        })
+        });
+
+        data.content = data.content.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
         let lastMessageSendedDate = lastDate[socket.id];
         if (!lastMessageSendedDate) lastMessageSendedDate = Date.now();
