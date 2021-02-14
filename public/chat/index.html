@@ -116,6 +116,10 @@
 
         socket.on("messageNotSended", (m) => {});
 
+        socket.on("userLeft", (name) => {});
+
+        socket.on("userJoin", (name) => {});
+
         socket.on("usersCountUpdated", (n) => {
             console.log(n)
             setUsersCounter(n)
