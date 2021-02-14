@@ -51,10 +51,11 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (data) => {
         // Remove additional information sended by client.
+        const avatar = data.author.avatar_url
         data = {
             author: {
                 name: escapeHTML(breakString(data.author.name, 10)),
-                avatar_url: encodeURI(data.author.avatar_url) || DEFAULT_USER_AVATAR,
+                avatar_url: avatar ? encodeURI(avatar) : DEFAULT_USER_AVATAR,
             },
             content: escapeHTML(breakString(data.content, 250)),
         };
