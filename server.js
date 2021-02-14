@@ -26,6 +26,14 @@ const getMentions = (s) => s.match(mentionRegExp) || [];
 
 let connections = 0;
 
+function escapeHTML(string) {
+    return string
+        .replace(/&/g, "&amp;")
+        .replace(/>/g, "&gt;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;")
+}
+
 io.on('connection', (socket) => {
     connections++;
 
@@ -45,14 +53,13 @@ io.on('connection', (socket) => {
         // Remove additional information sended by client.
         data = {
             author: {
-                name: breakString(data.author.name, 10),
+                name: escapeHTML(breakString(data.author.name, 10)),
                 avatar_url: data.author.avatar_url || DEFAULT_USER_AVATAR,
             },
-            content: breakString(data.content, 250),
-            mentions: getMentions(data.content),
+            content: escapeHTML(breakString(data.content, 250)),
         };
 
-        data.content = data.content.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+        data.mentions = getMentions(data.content)
 
         data.content = data.content.replace(linkRegExp, (item) => {
             item = item.replace("'", "%27").replace('"', "%22").replace('`', "%60")
