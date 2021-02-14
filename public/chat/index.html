@@ -91,7 +91,6 @@
 
         function renderMessageContent(string) {
             string = string.replace(mentionRegExp, (item) => {
-                console.log(item);
                 return `<span class='colored'>${item}</span>`
             })
             return `<p>${string}</p>`
