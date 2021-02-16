@@ -103,13 +103,19 @@
             updateScroll();
         }
 
-        function renderMessage(message) {
+        function renderMessage(message, extra) {
+            extra = extra || ''
             addMessageRendered(
-                "<div class='message'><img class='user-image' src='" + message.author.avatar_url + "'><div class='content'>" + 
-                renderUsername(message.author.name) + 
-                renderMessageContent(message.content) + "</div></div>"
-            );
-
+                `
+                <div class="message ${extra}">
+                    <img class="user-image" src="${message.author.avatar_url}">
+                    <div class="content">
+                        ${renderUsername(message.author.name)}
+                        ${renderMessageContent(message.content)}
+                    </div>
+                </div>
+                `
+            )
             updateScroll();
         }
         
@@ -121,7 +127,9 @@
             $('#users-counter').html(n)
         }
 
-        socket.on("messageNotSended", (m) => {});
+        socket.on("messageNotSended", (m) => {
+            renderMessage(m, 'failed')
+        });
 
         socket.on("userLeft", (name) => {
             renderSimpleMessage(`${name} saiu do chat!`)
