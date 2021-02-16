@@ -38,7 +38,7 @@
         const address = 'https://nium-chat.herokuapp.com';
         const socket = io(address);
 
-        const mentionRegExp = new RegExp(/\@([a-zA-Z0-9]+)/gm)
+        const mentionRegExp = new RegExp(/\@([a-zA-Z0-9]+)/gm);
 
         const squares = document.getElementsByClassName('square');
 
@@ -49,20 +49,20 @@
                 let c = ca[i];
                 while (c.charAt(0) == ' ') c = c.substring(1, c.length);
                 if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
+            };
             return null;
-        }
+        };
 
         function redirectToHome() {
             return window.location.replace(
                 window.location.href.replace('/chat', ''));
-        }
+        };
 
-        if (getCookie('chatUsername') === null) redirectToHome()
+        if (getCookie('chatUsername') === null) redirectToHome();
 
         function getName() {
             return getCookie('chatUsername') || socket.id;
-        }
+        };
 
         for (square of squares) square.addEventListener('click', onSquareClicked);
 
@@ -72,15 +72,15 @@
 
             r.style.setProperty('--border', square.getPropertyValue('border-color'));
             r.style.setProperty('--background', square.getPropertyValue('background-color'));
-        }
+        };
 
         function updateScroll() {
             $('.messages').animate({ scrollTop: $('.messages').prop('scrollHeight') }, 500);
-        }
+        };
 
         function addMessageRendered(html) {
             $('.messages').append(html);
-        }
+        };
 
         function renderUsername(name) {
             const today = new Date();
@@ -88,7 +88,7 @@
 
             name = `${name} at ${today.getHours()}:${minutes <= 9? '0' + minutes : minutes}`;
             return "<h5 class='username'>" + name + "</h5>";
-        }
+        };
 
         function renderMessageContent(string) {
             string = string.replace(mentionRegExp, (item) => {
@@ -96,15 +96,15 @@
             });
             string = twemoji.parse(string);
             return `<p>${string}</p>`;
-        }
+        };
 
         function renderSimpleMessage(string) {
             addMessageRendered(`<p class='simple-message'>${string}</p>`);
             updateScroll();
-        }
+        };
 
         function renderMessage(message, extra) {
-            extra = extra || ''
+            extra = extra || '';
             addMessageRendered(
                 `
                 <div class="message ${extra}">
@@ -115,46 +115,46 @@
                     </div>
                 </div>
                 `
-            )
+            );
             updateScroll();
-        }
-        
+        };
+
         function playAudioNotification(path) {
             return new Audio(`./${path}.ogg`).play();
-        }
+        };
 
         function setUsersCounter(n) {
-            $('#users-counter').html(n)
-        }
+            $('#users-counter').html(n);
+        };
 
         socket.on("messageNotSended", (m) => {
-            renderMessage(m, 'failed')
+            renderMessage(m, 'failed');
         });
 
         socket.on("userLeft", (name) => {
-            renderSimpleMessage(`${name} saiu do chat!`)
+            renderSimpleMessage(`${name} saiu do chat!`);
         });
 
         socket.on("userJoin", (name) => {
-            renderSimpleMessage(`${name} entrou no chat!`)
+            renderSimpleMessage(`${name} entrou no chat!`);
         });
 
         socket.on("usersCountUpdated", (n) => {
-            setUsersCounter(n)
+            setUsersCounter(n);
         });
 
         socket.on("receivedMessage", (m) => {
             renderMessage(m);
 
             if (m.mentions.includes(`@${getName()}`)) return playAudioNotification('mention');
-            
+
             return playAudioNotification('message');
-        })
+        });
 
         socket.on("messageSended", (m) => {
             document.getElementById("message").value = '';
             renderMessage(m);
-        })
+        });
 
         $("#chat").submit((event) => {
             event.preventDefault();
@@ -170,8 +170,8 @@
                     },
                     content: message
                 });
-            }
-        })
+            };
+        });
     </script>
 </body>
 </html>
