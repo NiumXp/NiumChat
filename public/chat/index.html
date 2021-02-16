@@ -70,8 +70,14 @@
             let r = document.querySelector(':root');
             square = window.getComputedStyle(square.target);
 
+            const bgColor = square.getPropertyValue('background-color');
+
             r.style.setProperty('--border', square.getPropertyValue('border-color'));
-            r.style.setProperty('--background', square.getPropertyValue('background-color'));
+            r.style.setProperty('--background', bgColor);
+            r.style.setProperty('--scroll-bar-color',
+                                bgColor.replace('0.025', '0.25'));
+            r.style.setProperty('--scroll-bar-color-on-hover',
+                                bgColor);
         };
 
         function updateScroll() {

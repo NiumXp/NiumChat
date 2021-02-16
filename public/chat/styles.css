@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
 
 :root {
-  --border: rgb(119, 0, 255);
-  --background: rgba(119, 0, 255, 0.025);
+    --border: rgb(119, 0, 255);
+    --background: rgba(119, 0, 255, 0.025);
+    --scroll-bar-color: rgba(119, 0, 255, 0.25);
+    --scroll-bar-color-on-hover: rgba(119, 0, 255, 0.5);
 }
 
 .colored {
@@ -205,11 +207,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(119, 0, 255, 0.25);
+  background: var(--scroll-bar-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(119, 0, 255, 0.5);
+  background: var(--scroll-bar-color-on-hover);
 }
 
 img.emoji {
