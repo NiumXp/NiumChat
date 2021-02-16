@@ -109,7 +109,8 @@
         }
 
         function redirectToChat() {
-            return window.location.replace(window.location.href + '/chat');
+            window.location.replace(window.location.href + '/chat');
+            return false
         }
 
         if (getCookie('chatUsername')) redirectToChat();
@@ -123,6 +124,7 @@
                 setCookie('chatUsername', username, 1);
                 return redirectToChat();
             }
+            return false
         })
     </script>
 </body>
