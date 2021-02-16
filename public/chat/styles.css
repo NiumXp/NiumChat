@@ -201,3 +201,10 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(119, 0, 255, 0.5);
 }
+
+img.emoji {
+    height: 1.2em;
+    width: 1.2em;
+    margin: 0 0.05em 0 0.05em;
+    vertical-align: -0.2em;
+ }
