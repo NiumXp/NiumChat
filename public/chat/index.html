@@ -93,8 +93,9 @@
         function renderMessageContent(string) {
             string = string.replace(mentionRegExp, (item) => {
                 return `<span class='colored'>${item}</span>`
-            })
-            return `<p>${string}</p>`
+            });
+            string = twemoji.parse(string);
+            return `<p>${string}</p>`;
         }
 
         function renderSimpleMessage(string) {
